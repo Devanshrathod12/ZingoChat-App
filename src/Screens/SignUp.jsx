@@ -27,7 +27,7 @@ const SignUp = ({ navigation }) => {
       <View style={styles.contentWrapper}>
         <View style={styles.headerContainer}>
           <Text style={styles.createAccountTitle}>Create Account</Text>
-          <Text style={styles.descriptionText}>Create an account so you can explore all the existing jobs</Text>
+          <Text style={styles.descriptionText}>Sign up to start your chatting journey</Text>
         </View>
 
         <View style={styles.inputContainer}>
@@ -71,7 +71,7 @@ const SignUp = ({ navigation }) => {
           <Text style={styles.signUpButtonText}>Sign up</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate(NavigationString.Login)} style={styles.alreadyHaveAccountButton}>
+        <TouchableOpacity onPress={() => navigation.replace(NavigationString.Login)} style={styles.alreadyHaveAccountButton}>
           <Text style={styles.alreadyHaveAccountText}>Already have an account</Text>
         </TouchableOpacity>
 
