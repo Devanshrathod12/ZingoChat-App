@@ -1,22 +1,28 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView, TextInput, StatusBar } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView, TextInput, StatusBar, Dimensions } from 'react-native';
 import { scale, verticalScale, moderateScale, fontScale } from '../Styles/StyleConfig';
 import { colors } from '../Styles/colors';
 
-import GoogleLogo from '../assets/BlackGoogleIcon.png'; // Assuming Google.png is the G icon
-import FacebookLogo from '../assets/FaceBookIcon.png'; // Assuming Facebook.png is the F icon
+import GoogleLogo from '../assets/BlackGoogleIcon.png';
+import FacebookLogo from '../assets/FaceBookIcon.png';
 import AppleLogo from '../assets/AppleIcon.png';
+import NavigationString from '../Navigation/NavigationString'; // Assuming you have this for navigation to Login
 
-const SignUp = () => {
+const { width } = Dimensions.get('window');
+
+const SignUp = ({ navigation }) => {
+  const [focusedInput, setFocusedInput] = useState(null);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
-        backgroundColor={colors.MainBackground}
+        backgroundColor={colors.WhiteBackground}
         barStyle="dark-content"
       />
 
-      <View style={styles.backgroundCircleTopLeft} />
-      <View style={styles.backgroundCircleBottomRight} />
+      <View style={styles.topRightShape} />
+      <View style={styles.bottomLeftShape1} />
+      <View style={styles.bottomLeftShape2} />
 
       <View style={styles.contentWrapper}>
         <View style={styles.headerContainer}>
@@ -26,23 +32,38 @@ const SignUp = () => {
 
         <View style={styles.inputContainer}>
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              focusedInput === 'email' && styles.activeInput
+            ]}
             placeholder="Email"
-            placeholderTextColor={colors.PlaceholderText}
+            placeholderTextColor={colors.SecondaryText}
             keyboardType="email-address"
             autoCapitalize="none"
+            onFocus={() => setFocusedInput('email')}
+            onBlur={() => setFocusedInput(null)}
           />
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              focusedInput === 'password' && styles.activeInput
+            ]}
             placeholder="Password"
-            placeholderTextColor={colors.PlaceholderText}
+            placeholderTextColor={colors.SecondaryText}
             secureTextEntry
+            onFocus={() => setFocusedInput('password')}
+            onBlur={() => setFocusedInput(null)}
           />
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              focusedInput === 'confirmPassword' && styles.activeInput
+            ]}
             placeholder="Confirm Password"
-            placeholderTextColor={colors.PlaceholderText}
+            placeholderTextColor={colors.SecondaryText}
             secureTextEntry
+            onFocus={() => setFocusedInput('confirmPassword')}
+            onBlur={() => setFocusedInput(null)}
           />
         </View>
 
@@ -50,7 +71,7 @@ const SignUp = () => {
           <Text style={styles.signUpButtonText}>Sign up</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.alreadyHaveAccountButton}>
+        <TouchableOpacity onPress={() => navigation.navigate(NavigationString.Login)} style={styles.alreadyHaveAccountButton}>
           <Text style={styles.alreadyHaveAccountText}>Already have an account</Text>
         </TouchableOpacity>
 
@@ -61,7 +82,7 @@ const SignUp = () => {
               <Image source={GoogleLogo} style={styles.socialIcon} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.socialButton}>
-              <Image source={FacebookLogo} style={styles.socialButton} />
+              <Image source={FacebookLogo} style={styles.socialIcon} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.socialButton}>
               <Image source={AppleLogo} style={styles.socialIcon} />
@@ -78,70 +99,101 @@ export default SignUp;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.MainBackground,
+    backgroundColor: colors.WhiteBackground,
   },
-  backgroundCircleTopLeft: {
+  topRightShape: {
     position: 'absolute',
-    top: -verticalScale(100),
-    left: -scale(100),
-    width: scale(300),
-    height: scale(300),
-    borderRadius: scale(150),
-    backgroundColor: colors.TransparentWhite,
+    top: -verticalScale(150),
+    right: -scale(100),
+    width: width * 1.2,
+    height: width * 1.2,
+    borderRadius: width * 0.6,
+    backgroundColor: colors.InputBgBlue,
+    opacity: 0.6,
+    zIndex: -1,
   },
-  backgroundCircleBottomRight: {
+  bottomLeftShape1: {
     position: 'absolute',
     bottom: -verticalScale(100),
-    right: -scale(100),
-    width: scale(300),
-    height: scale(300),
-    borderRadius: scale(150),
-    backgroundColor: colors.TransparentWhite,
+    left: -scale(150),
+    width: width,
+    height: width,
+    borderRadius: width / 2,
+    borderWidth: 1,
+    borderColor: colors.LineColor,
+    zIndex: -1,
+  },
+  bottomLeftShape2: {
+    position: 'absolute',
+    bottom: -verticalScale(250),
+    left: -scale(50),
+    width: width,
+    height: width,
+    borderRadius: width / 2,
+    borderWidth: 1,
+    borderColor: colors.LineColor,
+    zIndex: -1,
   },
   contentWrapper: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: scale(20),
+    paddingHorizontal: scale(30),
   },
   headerContainer: {
-    marginBottom: verticalScale(40),
+    alignItems: 'center',
+    marginBottom: verticalScale(50),
+    marginTop: verticalScale(10),
   },
   createAccountTitle: {
-    fontSize: fontScale(28),
-    fontWeight: '700',
-    color: colors.PrimaryBlue,
-    textAlign: 'center',
-    marginBottom: verticalScale(8),
+    fontSize: fontScale(32),
+    fontWeight: "bold",
+    color: colors.BlueBackground,
+    marginBottom: verticalScale(40),
   },
   descriptionText: {
-    fontSize: fontScale(16),
-    color: colors.SecondaryText,
+    fontSize: fontScale(24),
+    color: colors.BlackText,
+    fontWeight: "600",
     textAlign: 'center',
-    paddingHorizontal: scale(10),
+    lineHeight: 28,
   },
   inputContainer: {
     width: '100%',
-    marginBottom: verticalScale(20),
+    marginBottom: verticalScale(30),
   },
   input: {
     width: '100%',
-    height: verticalScale(50),
-    backgroundColor: colors.InputBackground,
+    height: verticalScale(55),
+    backgroundColor: colors.InputBgBlue,
     borderRadius: moderateScale(10),
-    paddingHorizontal: scale(15),
-    fontSize: fontScale(16),
+    paddingHorizontal: scale(20),
+    fontSize: fontScale(15),
     color: colors.BlackText,
-    marginBottom: verticalScale(15),
+    marginBottom: verticalScale(20),
+    fontWeight: '500',
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  activeInput: {
+    borderColor: colors.BrandBlue,
   },
   signUpButton: {
     width: '100%',
     height: verticalScale(55),
-    backgroundColor: colors.PrimaryButtonBlue,
+    backgroundColor: colors.BrandBlue,
     borderRadius: moderateScale(10),
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: verticalScale(20),
+    marginBottom: verticalScale(34),
+    shadowColor: colors.BrandBlue,
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
+    elevation: 10,
   },
   signUpButtonText: {
     fontSize: fontScale(18),
@@ -149,32 +201,33 @@ const styles = StyleSheet.create({
     color: colors.White,
   },
   alreadyHaveAccountButton: {
-    marginBottom: verticalScale(40),
+    marginBottom: verticalScale(50),
   },
   alreadyHaveAccountText: {
-    fontSize: fontScale(16),
-    color: colors.SecondaryText,
-    fontWeight: '500',
+    fontSize: fontScale(14),
+    color: colors.DarkGrayText,
+    fontWeight: '700',
   },
   orContinueContainer: {
     width: '100%',
     alignItems: 'center',
   },
   orContinueText: {
-    fontSize: fontScale(14),
-    color: colors.SecondaryText,
+    fontSize: fontScale(13),
+    color: colors.BrandBlue,
+    fontWeight: '700',
     marginBottom: verticalScale(20),
   },
   socialButtonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     width: '70%',
   },
   socialButton: {
-    width: scale(50),
-    height: scale(50),
+    width: scale(60),
+    height: verticalScale(45),
     borderRadius: moderateScale(10),
-    backgroundColor: colors.InputBackground,
+    backgroundColor: colors.SocialBtnBg,
     justifyContent: 'center',
     alignItems: 'center',
   },
