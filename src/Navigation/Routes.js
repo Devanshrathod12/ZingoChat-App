@@ -11,6 +11,7 @@ const Route = () => {
     return (
         <NavigationContainer>          
             <Stack.Navigator
+              // card styles for the ios horizontal left to right screen swift via navigation
                 screenOptions={{
                     headerShown: false,
                     gestureEnabled: true,
